@@ -9,7 +9,9 @@
     "dev": "tsc --watch",
     "start": "node dist/index.js",
     "test": "tsx --test tests/*.test.ts",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json"
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json && tsc -p tsconfig.worker.json",
+    "dev:worker": "wrangler dev",
+    "deploy": "wrangler deploy"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,7 @@
   "author": "dlwiest",
   "license": "ISC",
   "dependencies": {
+    "@cfworker/json-schema": "^4.1.1",
     "@dlwiest/ts-tonal-client": "^0.6.0",
     "@modelcontextprotocol/sdk": "^1.30.0"
   },
