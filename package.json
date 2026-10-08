@@ -29,8 +29,10 @@
     "@modelcontextprotocol/sdk": "^1.30.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261008.1",
     "@types/node": "^20.14.8",
     "tsx": "^4.20.6",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "wrangler": "^4.148.0"
   }
 }
