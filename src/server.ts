@@ -1,13 +1,8 @@
 import { createRequire } from 'node:module';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import {
-  ListToolsRequestSchema,
-  CallToolRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
+import { buildServer } from './build-server.js';
 import { TonalService } from './services/tonal-service.js';
-import { allTools, toolsRegistry } from './tools/registry.js';
-import { handleToolError } from './utils/error-handler.js';
 
 const packageMetadata: unknown = createRequire(import.meta.url)('../package.json');
 if (
@@ -22,55 +17,11 @@ const packageVersion = packageMetadata.version;
 
 export class TonalMCPServer {
   private server: Server;
-  private tonalService: TonalService;
 
   constructor() {
-    this.server = new Server(
-      {
-        name: 'tonal-mcp',
-        version: packageVersion,
-      },
-      {
-        capabilities: {
-          tools: {},
-        },
-      }
-    );
-
-    this.tonalService = new TonalService();
-    this.setupHandlers();
+    const tonalService = new TonalService();
+    this.server = buildServer(() => tonalService.getClient(), packageVersion);
     console.error('TonalMCPServer created');
-  }
-
-  private setupHandlers() {
-    // Register tool list handler
-    this.server.setRequestHandler(ListToolsRequestSchema, async () => {
-      return {
-        tools: allTools.map(tool => ({
-          name: tool.name,
-          description: tool.description,
-          inputSchema: tool.inputSchema,
-          annotations: tool.annotations,
-        })),
-      };
-    });
-
-    // Register tool execution handler
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-      const { name, arguments: args } = request.params;
-
-      try {
-        const tool = toolsRegistry.get(name);
-        if (!tool) {
-          throw new Error(`Unknown tool: ${name}`);
-        }
-
-        const client = await this.tonalService.getClient();
-        return await tool.handler(client, args);
-      } catch (error) {
-        return handleToolError(error, name);
-      }
-    });
   }
 
   async run() {
