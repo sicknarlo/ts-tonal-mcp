@@ -28,6 +28,7 @@
   "license": "ISC",
   "dependencies": {
     "@cfworker/json-schema": "^4.1.1",
+    "@cloudflare/workers-oauth-provider": "^1.2.3",
     "@dlwiest/ts-tonal-client": "^0.6.0",
     "@modelcontextprotocol/sdk": "^1.30.0"
   },

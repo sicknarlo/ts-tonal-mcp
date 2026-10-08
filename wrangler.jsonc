@@ -3,6 +3,10 @@
   "main": "worker/index.ts",
   "compatibility_date": "2026-10-01",
   "compatibility_flags": ["nodejs_compat"],
+  "kv_namespaces": [{ "binding": "OAUTH_KV" }],
+  "vars": {
+    "ALLOWED_GITHUB_USERS": "sicknarlo"
+  },
   "observability": { "enabled": true },
   "dev": { "port": 8788 }
 }
