@@ -82,6 +82,23 @@ npm start
 node dist/index.js
 ```
 
+### Remote (Cloudflare Workers)
+
+`worker/` serves the same tools over Streamable HTTP at `/mcp`, behind OAuth that signs you in with GitHub and only completes for logins in `ALLOWED_GITHUB_USERS`. Claude and ChatGPT both connect to it as a custom connector.
+
+Prerequisites: Node 22+ for wrangler (`.node-version` pins 24), a Cloudflare account (`npx wrangler login`), and a GitHub OAuth app whose callback is `https://<worker-host>/callback`.
+
+```bash
+npx wrangler kv namespace create OAUTH_KV   # put the id in wrangler.jsonc
+npx wrangler secret put GITHUB_CLIENT_ID
+npx wrangler secret put GITHUB_CLIENT_SECRET
+npx wrangler secret put TONAL_USERNAME
+npx wrangler secret put TONAL_PASSWORD
+npm run deploy
+```
+
+Set `PUBLIC_URL` and `ALLOWED_GITHUB_USERS` in `wrangler.jsonc`. For local runs, put the same secrets and `PUBLIC_URL=http://localhost:8788` in `.dev.vars` and run `npm run dev:worker`.
+
 ## Available Tools
 
 The server provides 18 tools for LLM interactions:
